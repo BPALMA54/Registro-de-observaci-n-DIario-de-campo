@@ -1,0 +1,885 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Reporte de Observación y Diario de Campo — Lenguaje No Verbal</title>
+<style>
+  :root {
+    --bg: #ffffff;
+    --bg2: #f8f9fa;
+    --bg3: #e9ecef;
+    --text: #212529;
+    --text2: #495057;
+    --accent: #1a4f8a;
+    --accent2: #2563a8;
+    --border: #ced4da;
+    --warn: #ffc107;
+    --warn-bg: #fff8e1;
+    --success: #28a745;
+    --success-bg: #f0fff4;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #1a1a2e;
+      --bg2: #16213e;
+      --bg3: #0f3460;
+      --text: #e0e0e0;
+      --text2: #a0a0b0;
+      --accent: #4a9ede;
+      --accent2: #64b5f6;
+      --border: #3a4a6a;
+      --warn: #ffc107;
+      --warn-bg: #2a2000;
+      --success: #4caf50;
+      --success-bg: #0a2a0a;
+    }
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Georgia', serif;
+    font-size: 13px;
+    line-height: 1.6;
+    color: var(--text);
+    background: var(--bg);
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 20px;
+  }
+
+  /* ── PANTALLA: navegación entre secciones ── */
+  .nav-tabs {
+    display: flex;
+    gap: 4px;
+    margin-bottom: 24px;
+    flex-wrap: wrap;
+    border-bottom: 2px solid var(--accent);
+    padding-bottom: 8px;
+  }
+  .nav-btn {
+    padding: 7px 14px;
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 6px 6px 0 0;
+    cursor: pointer;
+    font-size: 12px;
+    color: var(--text2);
+    transition: all 0.2s;
+  }
+  .nav-btn.active {
+    background: var(--accent);
+    color: #fff;
+    border-color: var(--accent);
+    font-weight: bold;
+  }
+  .nav-btn:hover:not(.active) { background: var(--bg3); }
+
+  .section { display: none; }
+  .section.active { display: block; }
+
+  /* ── CABECERA ── */
+  .doc-header {
+    background: linear-gradient(135deg, var(--accent) 0%, var(--accent2) 100%);
+    color: #fff;
+    padding: 20px 24px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+  }
+  .doc-header h1 { font-size: 20px; font-weight: bold; margin-bottom: 4px; }
+  .doc-header h2 { font-size: 14px; font-weight: normal; opacity: 0.9; }
+  .doc-header .meta { font-size: 11px; margin-top: 10px; opacity: 0.8; }
+
+  /* ── BLOQUES GENERALES ── */
+  h2 { font-size: 15px; color: var(--accent); border-bottom: 2px solid var(--accent); padding-bottom: 4px; margin: 18px 0 10px; }
+  h3 { font-size: 13px; color: var(--accent2); margin: 14px 0 6px; }
+  p { margin-bottom: 8px; color: var(--text2); }
+
+  .info-box {
+    background: var(--warn-bg);
+    border-left: 4px solid var(--warn);
+    padding: 12px 16px;
+    border-radius: 0 6px 6px 0;
+    margin-bottom: 16px;
+  }
+  .info-box strong { color: var(--text); }
+
+  .instruccion-box {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 14px 18px;
+    margin-bottom: 14px;
+  }
+  .instruccion-box ol, .instruccion-box ul { padding-left: 20px; }
+  .instruccion-box li { margin-bottom: 5px; color: var(--text2); }
+
+  /* ── TABLA TEÓRICA ── */
+  .theory-table { width: 100%; border-collapse: collapse; font-size: 12px; margin-bottom: 16px; }
+  .theory-table th {
+    background: var(--accent);
+    color: #fff;
+    padding: 8px 10px;
+    text-align: left;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  .theory-table td { padding: 7px 10px; border-bottom: 1px solid var(--border); vertical-align: top; }
+  .theory-table tr:nth-child(even) td { background: var(--bg2); }
+  .theory-table td:first-child { font-weight: bold; color: var(--accent2); width: 15%; }
+  .theory-table td:nth-child(2) { width: 30%; }
+  .theory-table td:nth-child(3) { width: 55%; }
+
+  /* ── FICHA DE OBSERVACIÓN ── */
+  .ficha {
+    border: 2px solid var(--accent);
+    border-radius: 10px;
+    overflow: hidden;
+    margin-bottom: 20px;
+  }
+  .ficha-header {
+    background: var(--accent);
+    color: #fff;
+    padding: 10px 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .ficha-header h3 { color: #fff; margin: 0; font-size: 14px; }
+  .ficha-header .pts { background: rgba(255,255,255,0.25); padding: 3px 10px; border-radius: 20px; font-size: 11px; }
+  .ficha-body { padding: 16px; }
+
+  .campo-fila {
+    display: grid;
+    gap: 10px;
+    margin-bottom: 10px;
+  }
+  .campo-fila.col2 { grid-template-columns: 1fr 1fr; }
+  .campo-fila.col3 { grid-template-columns: 1fr 1fr 1fr; }
+
+  .campo {
+    display: flex;
+    flex-direction: column;
+  }
+  .campo label {
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--text2);
+    margin-bottom: 3px;
+    font-weight: bold;
+  }
+  .campo .linea {
+    border-bottom: 1px solid var(--border);
+    min-height: 24px;
+    padding: 2px 4px;
+    font-size: 12px;
+    color: var(--text2);
+  }
+  .campo .linea-lg {
+    border: 1px solid var(--border);
+    min-height: 50px;
+    border-radius: 4px;
+    padding: 4px 6px;
+    font-size: 12px;
+    color: var(--text2);
+    background: var(--bg2);
+  }
+
+  .obs-table { width: 100%; border-collapse: collapse; font-size: 11.5px; margin: 10px 0; }
+  .obs-table th {
+    background: var(--bg3);
+    color: var(--text);
+    padding: 7px 8px;
+    text-align: left;
+    font-size: 11px;
+    border: 1px solid var(--border);
+  }
+  .obs-table td {
+    padding: 6px 8px;
+    border: 1px solid var(--border);
+    vertical-align: top;
+    min-height: 30px;
+  }
+  .obs-table td.zona { width: 22%; font-weight: bold; color: var(--accent2); font-size: 11px; }
+  .obs-table td.conducta { width: 38%; }
+  .obs-table td.interp { width: 40%; }
+  .obs-table tr:nth-child(even) td { background: var(--bg2); }
+
+  .escala-row { display: flex; gap: 6px; align-items: center; margin-bottom: 8px; flex-wrap: wrap; }
+  .escala-label { font-size: 11px; color: var(--text2); min-width: 160px; }
+  .escala-boxes { display: flex; gap: 4px; }
+  .escala-box {
+    width: 28px; height: 28px;
+    border: 1.5px solid var(--border);
+    border-radius: 4px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 10px; color: var(--text2);
+    cursor: pointer;
+    transition: all 0.15s;
+    background: var(--bg2);
+  }
+  .escala-box:hover { background: var(--accent); color: #fff; border-color: var(--accent); }
+
+  /* ── DIARIO DE CAMPO ── */
+  .diario-bloque {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 14px;
+    margin-bottom: 14px;
+  }
+  .diario-bloque h3 { margin-bottom: 8px; display: flex; align-items: center; gap: 8px; }
+  .diario-bloque h3 .ico { font-size: 16px; }
+  .lineas-diario {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .linea-diario {
+    border-bottom: 1px dashed var(--border);
+    min-height: 26px;
+    padding: 2px 4px;
+    font-size: 12px;
+    color: var(--text2);
+  }
+
+  /* ── IMPRIMIR ── */
+  .print-btn {
+    background: var(--accent);
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: bold;
+    margin-bottom: 20px;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .print-btn:hover { background: var(--accent2); }
+
+  @media print {
+    .nav-tabs, .print-btn { display: none !important; }
+    .section { display: block !important; }
+    body { max-width: 100%; padding: 10px; font-size: 12px; }
+    .ficha { page-break-inside: avoid; }
+    .doc-header { background: #1a4f8a !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    .ficha-header { background: #1a4f8a !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    .theory-table th { background: #1a4f8a !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  }
+  @media (max-width: 600px) {
+    .campo-fila.col2, .campo-fila.col3 { grid-template-columns: 1fr; }
+    .theory-table { font-size: 11px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="doc-header">
+  <h1>📋 Reporte de Observación y Diario de Campo</h1>
+  <h2>Lenguaje No Verbal en Contexto Real — Campus UPS</h2>
+  <div class="meta">Materia: Técnicas de Entrevista y Evaluación · Trabajo autónomo individual · 4 puntos</div>
+</div>
+
+<button class="print-btn" onclick="window.print()">🖨️ Imprimir / Descargar PDF</button>
+
+<div class="nav-tabs">
+  <button class="nav-btn active" onclick="showSection('instrucciones')">📌 Instrucciones</button>
+  <button class="nav-btn" onclick="showSection('insumo')">📚 Insumo Teórico</button>
+  <button class="nav-btn" onclick="showSection('ficha1')">📋 Ficha A — Interacción</button>
+  <button class="nav-btn" onclick="showSection('ficha2')">🔭 Ficha B — Observación</button>
+  <button class="nav-btn" onclick="showSection('diario')">📔 Diario de Campo</button>
+</div>
+
+<!-- ══════════ INSTRUCCIONES ══════════ -->
+<div id="instrucciones" class="section active">
+  <h2>¿Qué debo hacer?</h2>
+
+  <div class="info-box">
+    <strong>Tarea:</strong> Sal al campus universitario y realiza <strong>2 observaciones de comunicación no verbal</strong> usando las dos modalidades disponibles: una con interacción directa (Ficha A) y otra solo observando sin intervenir (Ficha B). Deberás entregar ambas fichas más el diario de campo.
+  </div>
+
+  <h3>Objetivos de aprendizaje</h3>
+  <div class="instruccion-box">
+    <ul>
+      <li>Aplicar en contexto real los conceptos de comunicación no verbal estudiados en clase y en el libro <em>El lenguaje del cuerpo</em> de Allan y Barbara Pease.</li>
+      <li>Desarrollar habilidades de observación sistemática de conductas en dos condiciones distintas: con y sin interacción.</li>
+      <li>Interpretar clusters de señales corporales con criterio psicológico.</li>
+      <li>Comparar las ventajas y limitaciones de cada modalidad de observación.</li>
+      <li>Reflexionar sobre las dificultades del proceso de observación en entorno natural.</li>
+    </ul>
+  </div>
+
+  <h3>Las dos modalidades</h3>
+  <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:14px;">
+    <div style="background:var(--success-bg); border:2px solid var(--success); border-radius:8px; padding:14px;">
+      <h3 style="color:var(--success); margin-bottom:6px;">📋 Ficha A — Con Interacción</h3>
+      <p style="color:var(--text2); font-size:12px; margin-bottom:6px;">Te acercas a <strong>1 persona desconocida</strong> e inicias una conversación de al menos 10–15 minutos. Observas su lenguaje no verbal mientras interactúas con ella.</p>
+      <p style="color:var(--text2); font-size:11px;"><em>Ventaja:</em> puedes provocar reacciones y observar cambios. <em>Reto:</em> mantener la observación mientras conversas.</p>
+    </div>
+    <div style="background:var(--warn-bg); border:2px solid var(--warn); border-radius:8px; padding:14px;">
+      <h3 style="color:#a07000; margin-bottom:6px;">🔭 Ficha B — Solo Observación</h3>
+      <p style="color:var(--text2); font-size:12px; margin-bottom:6px;">Observas a <strong>1 persona o grupo de personas</strong> desde la distancia, sin intervenir ni establecer contacto. El sujeto no sabe que está siendo observado.</p>
+      <p style="color:var(--text2); font-size:11px;"><em>Ventaja:</em> conducta espontánea, sin influencia del observador. <em>Reto:</em> inferir el contexto de la interacción sin escuchar.</p>
+    </div>
+  </div>
+
+  <h3>Paso a paso</h3>
+  <div class="instruccion-box">
+    <ol>
+      <li><strong>Elige un escenario en el campus</strong> (cafetería, patio, biblioteca, pasillos) apropiado para cada modalidad.</li>
+      <li><strong>Ficha A:</strong> acércate a una persona desconocida, inicia conversación natural de 10–15 min y registra sus señales no verbales al finalizar.</li>
+      <li><strong>Ficha B:</strong> ubícate en un punto discreto del campus y observa a 1 persona o grupo durante 10–15 min sin intervenir. Registra lo observado.</li>
+      <li><strong>Completa cada ficha inmediatamente</strong> después de cada observación, mientras el recuerdo está fresco.</li>
+      <li><strong>Escribe el Diario de Campo</strong> al terminar ambas observaciones, comparando las dos experiencias.</li>
+      <li><strong>En tu informe final</strong> incluye: objetivo, escenario de cada observación, matriz utilizada, resultados e impresiones personales.</li>
+    </ol>
+  </div>
+
+  <h3>Recuerda: las 3 reglas de Pease para interpretar</h3>
+  <div class="instruccion-box">
+    <ol>
+      <li><strong>Lee los gestos en conjunto (clusters):</strong> Un solo gesto no dice nada. Busca grupos de señales que apunten en la misma dirección.</li>
+      <li><strong>Busca la congruencia:</strong> ¿El cuerpo dice lo mismo que las palabras? Si hay contradicción, el cuerpo suele decir la verdad.</li>
+      <li><strong>Interpreta en contexto:</strong> El mismo gesto puede significar cosas distintas según la situación. Considera el entorno y la conversación.</li>
+    </ol>
+  </div>
+</div>
+
+<!-- ══════════ INSUMO TEÓRICO ══════════ -->
+<div id="insumo" class="section">
+  <h2>Insumo Teórico: Comunicación No Verbal y su Significado</h2>
+  <p style="margin-bottom:12px; color: var(--text2);">Basado en: Pease, A. y Pease, B. (2006). <em>El lenguaje del cuerpo</em>. Amat Editorial. Úsalo como guía de referencia durante tu observación.</p>
+
+  <h3>1. Señales de las manos y palmas</h3>
+  <table class="theory-table">
+    <tr><th>Señal</th><th>Descripción</th><th>Significado probable</th></tr>
+    <tr><td>Palmas abiertas hacia arriba</td><td>Muestra las palmas al interlocutor</td><td>Apertura, honestidad, sumisión, deseo de no amenazar</td></tr>
+    <tr><td>Palmas hacia abajo</td><td>Palmas orientadas al suelo</td><td>Autoridad, control, afirmación dominante</td></tr>
+    <tr><td>Frotarse las manos</td><td>Frotar una mano contra la otra lentamente</td><td>Expectativa positiva, anticipación de algo</td></tr>
+    <tr><td>Manos unidas (entrelazadas)</td><td>Manos cruzadas o enlazadas frente al cuerpo</td><td>Tensión contenida, frustración o nerviosismo reprimido</td></tr>
+    <tr><td>El campanario (fingertips)</td><td>Yemas de los dedos juntas formando arco</td><td>Confianza en sí mismo, superioridad, seguridad</td></tr>
+    <tr><td>Manos en la espalda</td><td>Manos entrelazadas detrás del cuerpo</td><td>Autoridad, confianza, control de la situación</td></tr>
+    <tr><td>Pulgares visibles</td><td>Pulgares asomando por bolsillos o cinturón</td><td>Autoconfianza, actitud dominante, superioridad</td></tr>
+    <tr><td>Señalar con el dedo</td><td>Dedo índice extendido hacia el interlocutor</td><td>Agresividad, reproche, intento de dominación</td></tr>
+  </table>
+
+  <h3>2. Señales de los brazos</h3>
+  <table class="theory-table">
+    <tr><th>Señal</th><th>Descripción</th><th>Significado probable</th></tr>
+    <tr><td>Brazos cruzados sobre el pecho</td><td>Ambos brazos cruzados</td><td>Actitud defensiva, desacuerdo, inseguridad, desinterés</td></tr>
+    <tr><td>Cruce reforzado (puños)</td><td>Brazos cruzados con puños cerrados</td><td>Hostilidad combinada con actitud defensiva</td></tr>
+    <tr><td>Abrazo propio</td><td>Manos sujetando los propios brazos</td><td>Inseguridad profunda, necesidad de autoconsuelo</td></tr>
+    <tr><td>Un brazo cruzado</td><td>Un solo brazo cruzando el cuerpo</td><td>Inseguridad leve, barrera parcial de protección</td></tr>
+    <tr><td>Brazos abiertos, gestuales</td><td>Movimiento libre y amplio de brazos al hablar</td><td>Apertura, expresividad, comodidad, entusiasmo</td></tr>
+  </table>
+
+  <h3>3. Señales oculares y de la cabeza</h3>
+  <table class="theory-table">
+    <tr><th>Señal</th><th>Descripción</th><th>Significado probable</th></tr>
+    <tr><td>Contacto visual sostenido</td><td>Mantiene la mirada de forma natural</td><td>Interés, honestidad, confianza, respeto</td></tr>
+    <tr><td>Evita la mirada</td><td>Desvía los ojos con frecuencia</td><td>Incomodidad, mentira, timidez, desinterés</td></tr>
+    <tr><td>Pupilas dilatadas</td><td>Pupilas visiblemente grandes</td><td>Interés, atracción, estado emocional positivo</td></tr>
+    <tr><td>Pestañeo acelerado</td><td>Parpadeo muy frecuente</td><td>Tensión, estrés, ocultamiento de información</td></tr>
+    <tr><td>Cabeza ladeada</td><td>Inclina la cabeza hacia un lado</td><td>Interés genuino, escucha activa, apertura</td></tr>
+    <tr><td>Cabeza hacia abajo</td><td>Cabeza inclinada hacia el suelo</td><td>Actitud negativa, juicio, desaprobación</td></tr>
+    <tr><td>Asentir con la cabeza</td><td>Movimiento vertical lento y pausado</td><td>Acuerdo, escucha, aprobación</td></tr>
+    <tr><td>Levantar las cejas</td><td>Cejas alzadas al ver a alguien</td><td>Reconocimiento, saludo social, sorpresa positiva</td></tr>
+    <tr><td>Mirada de reojo</td><td>Mirada lateral sin mover la cabeza</td><td>Desconfianza, evaluación discreta, interés oculto</td></tr>
+  </table>
+
+  <h3>4. Señales de evaluación y engaño</h3>
+  <table class="theory-table">
+    <tr><th>Señal</th><th>Descripción</th><th>Significado probable</th></tr>
+    <tr><td>Taparse la boca</td><td>Lleva la mano a la boca al hablar</td><td>Posible ocultamiento, inseguridad, mentira</td></tr>
+    <tr><td>Tocarse la nariz</td><td>Roza o frota la nariz sutilmente</td><td>Posible engaño o incomodidad con la información</td></tr>
+    <tr><td>Frotarse el ojo</td><td>Se toca o frota el ojo mientras habla</td><td>Intentar no "ver" algo; posible engaño</td></tr>
+    <tr><td>Acariciarse la barbilla</td><td>Dedo pulgar bajo la barbilla, índice vertical</td><td>Evaluación, juicio, toma de decisión activa</td></tr>
+    <tr><td>Cabeza apoyada en la mano</td><td>Mano bajo la mejilla o barbilla</td><td>Aburrimiento, pérdida de interés</td></tr>
+    <tr><td>Tirar del cuello de la camisa</td><td>Jala levemente el collar de la prenda</td><td>Tensión, incomodidad, posible mentira</td></tr>
+  </table>
+
+  <h3>5. Postura, piernas y espacio personal</h3>
+  <table class="theory-table">
+    <tr><th>Señal</th><th>Descripción</th><th>Significado probable</th></tr>
+    <tr><td>Cuerpo inclinado hacia adelante</td><td>Se acerca al interlocutor mientras habla</td><td>Interés, atención, involucramiento emocional</td></tr>
+    <tr><td>Cuerpo reclinado hacia atrás</td><td>Se aleja del interlocutor</td><td>Desinterés, incomodidad, deseo de distancia</td></tr>
+    <tr><td>Pies apuntando hacia el interlocutor</td><td>Los pies orientados hacia quien habla</td><td>Interés genuino, atención, deseo de seguir la conversación</td></tr>
+    <tr><td>Pies apuntando hacia la salida</td><td>Los pies orientados hacia la puerta o lejos</td><td>Deseo de retirarse, desinterés, incomodidad</td></tr>
+    <tr><td>Piernas cruzadas al sentarse</td><td>Cruce de piernas típico</td><td>Puede indicar cierre defensivo o simplemente comodidad</td></tr>
+    <tr><td>Postura en espejo</td><td>Imita la postura del otro</td><td>Rapport, empatía, conexión, afinidad inconsciente</td></tr>
+    <tr><td>Distancia íntima (0–45 cm)</td><td>Muy cerca del interlocutor</td><td>Confianza, afecto, o invasión del espacio</td></tr>
+    <tr><td>Distancia social (1,2–3,6 m)</td><td>Distancia habitual entre conocidos</td><td>Interacción social formal o semiformal</td></tr>
+  </table>
+
+  <h3>6. Expresión facial y sonrisa</h3>
+  <table class="theory-table">
+    <tr><th>Señal</th><th>Descripción</th><th>Significado probable</th></tr>
+    <tr><td>Sonrisa genuina (Duchenne)</td><td>Involucra los músculos oculares, "patas de gallo"</td><td>Alegría real, apertura, bienestar emocional</td></tr>
+    <tr><td>Sonrisa falsa / social</td><td>Solo mueve los labios, ojos no participan</td><td>Cortesía superficial, ocultamiento emocional</td></tr>
+    <tr><td>Labios tensos (sin mostrar dientes)</td><td>Sonrisa con labios apretados</td><td>Secreto, desaprobación contenida, incomodidad</td></tr>
+    <tr><td>Boca hacia abajo permanente</td><td>Comisuras caídas de forma habitual</td><td>Tristeza, pesimismo, estado de ánimo negativo</td></tr>
+    <tr><td>Fruncir el ceño</td><td>Cejas juntas y hacia abajo</td><td>Concentración, confusión, desaprobación, enojo</td></tr>
+  </table>
+</div>
+
+<!-- ══════════ FICHA A — INTERACCIÓN ══════════ -->
+<div id="ficha1" class="section">
+  <div style="background:var(--success-bg); border:2px solid var(--success); border-radius:10px; padding:14px 18px; margin-bottom:18px;">
+    <h2 style="color:var(--success); border:none; margin:0 0 6px 0;">📋 Ficha A — Modalidad: Interacción Directa</h2>
+    <p style="color:var(--text2); font-size:12px; margin:0;">Te acercas a <strong>1 persona desconocida</strong> del campus e inicias una conversación espontánea de al menos 10–15 minutos. Observas su lenguaje no verbal mientras interactúas. Llena esta ficha inmediatamente al terminar.</p>
+  </div>
+
+  <div class="ficha">
+    <div class="ficha-header">
+      <h3>📍 Datos del Escenario</h3>
+      <span class="pts">Ficha A</span>
+    </div>
+    <div class="ficha-body">
+      <div class="campo-fila col3">
+        <div class="campo">
+          <label>Fecha</label>
+          <div class="linea"></div>
+        </div>
+        <div class="campo">
+          <label>Hora inicio</label>
+          <div class="linea"></div>
+        </div>
+        <div class="campo">
+          <label>Hora fin</label>
+          <div class="linea"></div>
+        </div>
+      </div>
+      <div class="campo-fila col2">
+        <div class="campo">
+          <label>Lugar / Escenario en el campus</label>
+          <div class="linea"></div>
+        </div>
+        <div class="campo">
+          <label>Nombre del/la estudiante observador/a</label>
+          <div class="linea"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="ficha">
+    <div class="ficha-header">
+      <h3>👤 Descripción del Sujeto</h3>
+    </div>
+    <div class="ficha-body">
+      <div class="campo-fila col3">
+        <div class="campo">
+          <label>Género aparente</label>
+          <div class="linea"></div>
+        </div>
+        <div class="campo">
+          <label>Edad aproximada</label>
+          <div class="linea"></div>
+        </div>
+        <div class="campo">
+          <label>Contextura / complexión</label>
+          <div class="linea"></div>
+        </div>
+      </div>
+      <div class="campo-fila col2">
+        <div class="campo">
+          <label>Descripción de la vestimenta</label>
+          <div class="linea-lg"></div>
+        </div>
+        <div class="campo">
+          <label>Apariencia general y actitud al momento del primer contacto</label>
+          <div class="linea-lg"></div>
+        </div>
+      </div>
+      <div class="campo-fila col2">
+        <div class="campo">
+          <label>¿Cómo iniciaste la conversación? (describe brevemente)</label>
+          <div class="linea-lg"></div>
+        </div>
+        <div class="campo">
+          <label>Tema/s de la conversación</label>
+          <div class="linea-lg"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="ficha">
+    <div class="ficha-header">
+      <h3>🔍 Registro de Comportamientos No Verbales — Con Interacción</h3>
+    </div>
+    <div class="ficha-body">
+      <p style="margin-bottom:8px; font-style:italic; color: var(--text2);">Describe lo que observaste en cada zona corporal del sujeto durante la conversación e interpreta según el insumo teórico de Pease.</p>
+      <table class="obs-table">
+        <tr>
+          <th>Zona corporal</th>
+          <th>Conducta observada (describe con detalle)</th>
+          <th>Interpretación (¿qué podría significar?)</th>
+        </tr>
+        <tr><td class="zona">Manos y palmas</td><td><div style="min-height:40px"></div></td><td><div style="min-height:40px"></div></td></tr>
+        <tr><td class="zona">Brazos (posición)</td><td><div style="min-height:40px"></div></td><td><div style="min-height:40px"></div></td></tr>
+        <tr><td class="zona">Mirada y ojos</td><td><div style="min-height:40px"></div></td><td><div style="min-height:40px"></div></td></tr>
+        <tr><td class="zona">Expresión facial</td><td><div style="min-height:40px"></div></td><td><div style="min-height:40px"></div></td></tr>
+        <tr><td class="zona">Postura corporal</td><td><div style="min-height:40px"></div></td><td><div style="min-height:40px"></div></td></tr>
+        <tr><td class="zona">Piernas y pies</td><td><div style="min-height:40px"></div></td><td><div style="min-height:40px"></div></td></tr>
+        <tr><td class="zona">Distancia / proxémica</td><td><div style="min-height:40px"></div></td><td><div style="min-height:40px"></div></td></tr>
+        <tr><td class="zona">Señales de evaluación o engaño</td><td><div style="min-height:40px"></div></td><td><div style="min-height:40px"></div></td></tr>
+        <tr><td class="zona">Paralenguaje (tono, velocidad, pausas)</td><td><div style="min-height:40px"></div></td><td><div style="min-height:40px"></div></td></tr>
+      </table>
+    </div>
+  </div>
+
+  <div class="ficha">
+    <div class="ficha-header">
+      <h3>📊 Interpretación General — Ficha A</h3>
+    </div>
+    <div class="ficha-body">
+      <div class="campo" style="margin-bottom:12px">
+        <label>Cluster dominante observado (conjunto de señales más frecuente o más llamativo)</label>
+        <div class="linea-lg" style="min-height:60px"></div>
+      </div>
+      <div class="campo" style="margin-bottom:12px">
+        <label>¿Existió congruencia entre lo que el sujeto decía verbalmente y lo que expresaba con el cuerpo? Explica con ejemplos concretos</label>
+        <div class="linea-lg" style="min-height:60px"></div>
+      </div>
+      <div class="campo" style="margin-bottom:12px">
+        <label>Estado emocional o actitudinal inferido del sujeto durante la interacción</label>
+        <div class="linea-lg" style="min-height:50px"></div>
+      </div>
+      <div class="campo" style="margin-bottom:12px">
+        <label>¿Cómo influyó tu presencia y tus propios gestos en el comportamiento del sujeto? (efecto del observador)</label>
+        <div class="linea-lg" style="min-height:50px"></div>
+      </div>
+
+      <h3 style="margin-top:10px">Escala de valoración subjetiva</h3>
+      <div class="escala-row">
+        <span class="escala-label">Apertura / receptividad percibida:</span>
+        <div class="escala-boxes">
+          <div class="escala-box">1</div><div class="escala-box">2</div><div class="escala-box">3</div><div class="escala-box">4</div><div class="escala-box">5</div>
+        </div>
+        <span style="font-size:10px; color: var(--text2);">(1=muy cerrado · 5=muy abierto)</span>
+      </div>
+      <div class="escala-row">
+        <span class="escala-label">Comodidad del sujeto en la interacción:</span>
+        <div class="escala-boxes">
+          <div class="escala-box">1</div><div class="escala-box">2</div><div class="escala-box">3</div><div class="escala-box">4</div><div class="escala-box">5</div>
+        </div>
+        <span style="font-size:10px; color: var(--text2);">(1=muy incómodo · 5=muy cómodo)</span>
+      </div>
+      <div class="escala-row">
+        <span class="escala-label">Congruencia verbal / no verbal:</span>
+        <div class="escala-boxes">
+          <div class="escala-box">1</div><div class="escala-box">2</div><div class="escala-box">3</div><div class="escala-box">4</div><div class="escala-box">5</div>
+        </div>
+        <span style="font-size:10px; color: var(--text2);">(1=muy incongruente · 5=muy congruente)</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════ FICHA B — SOLO OBSERVACIÓN ══════════ -->
+<div id="ficha2" class="section">
+  <div style="background:var(--warn-bg); border:2px solid var(--warn); border-radius:10px; padding:14px 18px; margin-bottom:18px;">
+    <h2 style="color:#8a6000; border:none; margin:0 0 6px 0;">🔭 Ficha B — Modalidad: Solo Observación (sin intervención)</h2>
+    <p style="color:var(--text2); font-size:12px; margin:0;">Ubícate en un punto discreto del campus y observa a <strong>1 persona o un grupo de personas</strong> durante 10–15 minutos, <em>sin acercarte ni establecer contacto</em>. El o los sujetos no saben que están siendo observados. Llena esta ficha inmediatamente al terminar.</p>
+  </div>
+
+  <div class="ficha">
+    <div class="ficha-header">
+      <h3>📍 Datos del Escenario</h3>
+      <span class="pts">Ficha B</span>
+    </div>
+    <div class="ficha-body">
+      <div class="campo-fila col3">
+        <div class="campo">
+          <label>Fecha</label>
+          <div class="linea"></div>
+        </div>
+        <div class="campo">
+          <label>Hora inicio</label>
+          <div class="linea"></div>
+        </div>
+        <div class="campo">
+          <label>Hora fin</label>
+          <div class="linea"></div>
+        </div>
+      </div>
+      <div class="campo-fila col3">
+        <div class="campo">
+          <label>Lugar / Escenario en el campus</label>
+          <div class="linea"></div>
+        </div>
+        <div class="campo">
+          <label>Distancia aproximada al sujeto/grupo</label>
+          <div class="linea"></div>
+        </div>
+        <div class="campo">
+          <label>¿Pudo escuchar algo de la conversación?</label>
+          <div class="linea"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="ficha">
+    <div class="ficha-header">
+      <h3>👥 Descripción del Sujeto o Grupo Observado</h3>
+    </div>
+    <div class="ficha-body">
+      <div class="campo" style="margin-bottom:10px">
+        <label>¿Es 1 persona sola, una díada (2 personas) o un grupo? Número de personas:</label>
+        <div class="linea"></div>
+      </div>
+      <div class="campo-fila col3">
+        <div class="campo">
+          <label>Género(s) aparente(s)</label>
+          <div class="linea"></div>
+        </div>
+        <div class="campo">
+          <label>Edad(es) aproximada(s)</label>
+          <div class="linea"></div>
+        </div>
+        <div class="campo">
+          <label>Contextura / apariencia general</label>
+          <div class="linea"></div>
+        </div>
+      </div>
+      <div class="campo-fila col2">
+        <div class="campo">
+          <label>Descripción de la vestimenta y presentación</label>
+          <div class="linea-lg"></div>
+        </div>
+        <div class="campo">
+          <label>Contexto aparente: ¿qué estaban haciendo cuando comenzaste a observar?</label>
+          <div class="linea-lg"></div>
+        </div>
+      </div>
+      <div class="campo">
+        <label>¿Qué tipo de relación parece existir entre los sujetos (si son más de uno)? Justifica tu inferencia por sus señales no verbales</label>
+        <div class="linea-lg"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="ficha">
+    <div class="ficha-header">
+      <h3>🔍 Registro de Comportamientos No Verbales — Sin Intervención</h3>
+    </div>
+    <div class="ficha-body">
+      <p style="margin-bottom:8px; font-style:italic; color: var(--text2);">Si observas un grupo, puedes centrarte en 1 sujeto focal o describir la dinámica grupal. Indica en cada fila a quién refieres si hay más de uno.</p>
+      <table class="obs-table">
+        <tr>
+          <th>Zona / Elemento</th>
+          <th>Conducta observada (describe con detalle lo que ves)</th>
+          <th>Interpretación (¿qué podría significar según Pease?)</th>
+        </tr>
+        <tr><td class="zona">Manos y palmas</td><td><div style="min-height:40px"></div></td><td><div style="min-height:40px"></div></td></tr>
+        <tr><td class="zona">Brazos (posición)</td><td><div style="min-height:40px"></div></td><td><div style="min-height:40px"></div></td></tr>
+        <tr><td class="zona">Mirada y ojos</td><td><div style="min-height:40px"></div></td><td><div style="min-height:40px"></div></td></tr>
+        <tr><td class="zona">Expresión facial</td><td><div style="min-height:40px"></div></td><td><div style="min-height:40px"></div></td></tr>
+        <tr><td class="zona">Postura corporal</td><td><div style="min-height:40px"></div></td><td><div style="min-height:40px"></div></td></tr>
+        <tr><td class="zona">Piernas y pies</td><td><div style="min-height:40px"></div></td><td><div style="min-height:40px"></div></td></tr>
+        <tr><td class="zona">Distancia entre personas / proxémica grupal</td><td><div style="min-height:40px"></div></td><td><div style="min-height:40px"></div></td></tr>
+        <tr><td class="zona">Sincronía / efecto espejo entre sujetos</td><td><div style="min-height:40px"></div></td><td><div style="min-height:40px"></div></td></tr>
+        <tr><td class="zona">Señales de dominancia o sumisión</td><td><div style="min-height:40px"></div></td><td><div style="min-height:40px"></div></td></tr>
+        <tr><td class="zona">Cambios durante los 15 min (¿evolucionó la dinámica?)</td><td><div style="min-height:40px"></div></td><td><div style="min-height:40px"></div></td></tr>
+      </table>
+    </div>
+  </div>
+
+  <div class="ficha">
+    <div class="ficha-header">
+      <h3>📊 Interpretación General — Ficha B</h3>
+    </div>
+    <div class="ficha-body">
+      <div class="campo" style="margin-bottom:12px">
+        <label>Cluster dominante observado (conjunto de señales más frecuente o más llamativo)</label>
+        <div class="linea-lg" style="min-height:60px"></div>
+      </div>
+      <div class="campo" style="margin-bottom:12px">
+        <label>Estado emocional o actitudinal inferido del sujeto / grupo durante la observación</label>
+        <div class="linea-lg" style="min-height:50px"></div>
+      </div>
+      <div class="campo" style="margin-bottom:12px">
+        <label>¿Qué limitaciones tuvo observar sin interactuar? ¿Qué información te faltó para interpretar con más certeza?</label>
+        <div class="linea-lg" style="min-height:55px"></div>
+      </div>
+      <div class="campo" style="margin-bottom:12px">
+        <label>Comparación con la Ficha A: ¿cuál de las dos modalidades te permitió observar más información? ¿Por qué?</label>
+        <div class="linea-lg" style="min-height:60px"></div>
+      </div>
+
+      <h3 style="margin-top:10px">Escala de valoración subjetiva</h3>
+      <div class="escala-row">
+        <span class="escala-label">Apertura / receptividad percibida:</span>
+        <div class="escala-boxes">
+          <div class="escala-box">1</div><div class="escala-box">2</div><div class="escala-box">3</div><div class="escala-box">4</div><div class="escala-box">5</div>
+        </div>
+        <span style="font-size:10px; color: var(--text2);">(1=muy cerrado · 5=muy abierto)</span>
+      </div>
+      <div class="escala-row">
+        <span class="escala-label">Tensión aparente del sujeto / grupo:</span>
+        <div class="escala-boxes">
+          <div class="escala-box">1</div><div class="escala-box">2</div><div class="escala-box">3</div><div class="escala-box">4</div><div class="escala-box">5</div>
+        </div>
+        <span style="font-size:10px; color: var(--text2);">(1=muy relajado · 5=muy tenso)</span>
+      </div>
+      <div class="escala-row">
+        <span class="escala-label">Dificultad de interpretación sin audio:</span>
+        <div class="escala-boxes">
+          <div class="escala-box">1</div><div class="escala-box">2</div><div class="escala-box">3</div><div class="escala-box">4</div><div class="escala-box">5</div>
+        </div>
+        <span style="font-size:10px; color: var(--text2);">(1=muy fácil · 5=muy difícil)</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════ DIARIO DE CAMPO ══════════ -->
+<div id="diario" class="section">
+  <h2>Diario de Campo — Reflexión Personal</h2>
+
+  <div class="info-box">
+    <strong>Instrucción:</strong> Escribe de forma libre y honesta. Este diario no tiene respuestas correctas o incorrectas. Es tu espacio para procesar la experiencia de observar el lenguaje no verbal en un contexto real.
+  </div>
+
+  <div class="ficha">
+    <div class="ficha-header">
+      <h3>📝 Datos del Estudiante</h3>
+    </div>
+    <div class="ficha-body">
+      <div class="campo-fila col3">
+        <div class="campo">
+          <label>Nombre completo</label>
+          <div class="linea"></div>
+        </div>
+        <div class="campo">
+          <label>Carrera / ciclo</label>
+          <div class="linea"></div>
+        </div>
+        <div class="campo">
+          <label>Fecha de escritura del diario</label>
+          <div class="linea"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="diario-bloque">
+    <h3><span class="ico">🌍</span> 1. Descripción del contexto general</h3>
+    <p style="margin-bottom:8px; color:var(--text2); font-size:11px;">¿Cómo fue la experiencia de salir al campus a observar? ¿Cómo te sentiste antes, durante y después?</p>
+    <div class="lineas-diario">
+      <div class="linea-diario"></div>
+      <div class="linea-diario"></div>
+      <div class="linea-diario"></div>
+      <div class="linea-diario"></div>
+      <div class="linea-diario"></div>
+      <div class="linea-diario"></div>
+    </div>
+  </div>
+
+  <div class="diario-bloque">
+    <h3><span class="ico">💡</span> 2. Impresiones personales más destacadas</h3>
+    <p style="margin-bottom:8px; color:var(--text2); font-size:11px;">¿Qué te llamó más la atención de lo que observaste? ¿Algún comportamiento te sorprendió o confirmó algo que ya intuías?</p>
+    <div class="lineas-diario">
+      <div class="linea-diario"></div>
+      <div class="linea-diario"></div>
+      <div class="linea-diario"></div>
+      <div class="linea-diario"></div>
+      <div class="linea-diario"></div>
+      <div class="linea-diario"></div>
+    </div>
+  </div>
+
+  <div class="diario-bloque">
+    <h3><span class="ico">🧩</span> 3. Dificultades encontradas</h3>
+    <p style="margin-bottom:8px; color:var(--text2); font-size:11px;">¿Qué fue lo más difícil? (iniciar la conversación, mantener la observación sin que se note, interpretar las señales, registrar en el momento…)</p>
+    <div class="lineas-diario">
+      <div class="linea-diario"></div>
+      <div class="linea-diario"></div>
+      <div class="linea-diario"></div>
+      <div class="linea-diario"></div>
+      <div class="linea-diario"></div>
+    </div>
+  </div>
+
+  <div class="diario-bloque">
+    <h3><span class="ico">📚</span> 4. Conexión con la teoría (Pease)</h3>
+    <p style="margin-bottom:8px; color:var(--text2); font-size:11px;">¿Qué conceptos del libro se cumplieron en tu observación? ¿Cuáles no se cumplieron o fueron difíciles de aplicar? Cita al menos 2 ejemplos concretos.</p>
+    <div class="lineas-diario">
+      <div class="linea-diario"></div>
+      <div class="linea-diario"></div>
+      <div class="linea-diario"></div>
+      <div class="linea-diario"></div>
+      <div class="linea-diario"></div>
+      <div class="linea-diario"></div>
+    </div>
+  </div>
+
+  <div class="diario-bloque">
+    <h3><span class="ico">🌱</span> 5. Aprendizajes obtenidos</h3>
+    <p style="margin-bottom:8px; color:var(--text2); font-size:11px;">¿Qué aprendiste sobre la comunicación no verbal que no sabías o no habías valorado antes? ¿Cómo te servirá esto en tu práctica como psicólogo/a?</p>
+    <div class="lineas-diario">
+      <div class="linea-diario"></div>
+      <div class="linea-diario"></div>
+      <div class="linea-diario"></div>
+      <div class="linea-diario"></div>
+      <div class="linea-diario"></div>
+      <div class="linea-diario"></div>
+    </div>
+  </div>
+
+  <div class="diario-bloque">
+    <h3><span class="ico">🔄</span> 6. ¿Qué harías diferente?</h3>
+    <p style="margin-bottom:8px; color:var(--text2); font-size:11px;">Si pudieras repetir esta actividad, ¿qué cambiarías en tu enfoque, metodología o elección del escenario?</p>
+    <div class="lineas-diario">
+      <div class="linea-diario"></div>
+      <div class="linea-diario"></div>
+      <div class="linea-diario"></div>
+      <div class="linea-diario"></div>
+    </div>
+  </div>
+
+  <div class="diario-bloque">
+    <h3><span class="ico">✏️</span> 7. Espacio libre</h3>
+    <p style="margin-bottom:8px; color:var(--text2); font-size:11px;">Cualquier reflexión adicional, anécdota o comentario que quieras compartir sobre esta experiencia.</p>
+    <div class="lineas-diario">
+      <div class="linea-diario"></div>
+      <div class="linea-diario"></div>
+      <div class="linea-diario"></div>
+      <div class="linea-diario"></div>
+      <div class="linea-diario"></div>
+    </div>
+  </div>
+
+  <div style="margin-top:20px; padding:14px; border:2px dashed var(--border); border-radius:8px; text-align:center;">
+    <p style="font-size:12px; color:var(--text2);">
+      <strong>Firma del estudiante:</strong> _________________________________ &nbsp;&nbsp;
+      <strong>Fecha de entrega:</strong> _______________________
+    </p>
+    <p style="font-size:11px; color:var(--text2); margin-top:6px;">
+      Universidad Politécnica Salesiana · Carrera de Psicología Clínica · Campus María Auxiliadora, Guayaquil
+    </p>
+  </div>
+
+  <div style="margin-top:28px; padding-top:14px; border-top:1px solid var(--border); text-align:right;">
+    <p style="font-size:11px; color:var(--text2); font-style:italic;">
+      Diseñado por <strong style="color:var(--accent); font-style:normal;">Bryan Palma</strong> · Msc. — Docente de Psicología Clínica, UPS Guayaquil
+    </p>
+  </div>
+</div>
+
+<script>
+function showSection(id) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  event.target.classList.add('active');
+}
+</script>
+</body>
+</html>
